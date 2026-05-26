@@ -28,11 +28,25 @@ app.post('/tarea', (req,res) => {
         tareas.push({
         "id":(tareas.length+1),
         "title":tarea.title,
-        "description":tarea.description || "",
+        "description":""||tarea.description,
         "completed":false,
         "createdAt":new Date().toISOString()
         })
         res.status(201).json({'mensaje':'Datos ingresados correctamente'})
+    }
+})
+
+//endpoint get que filtra una tarea con su respectivo id
+app.get('/tarea/:id',(req,res) => {
+    const id = req.params.id;
+    const tarea_id = tareas.find((elemento) => elemento.id===parseInt(id));
+    if(!tarea_id){
+        res.status(404).json({'mensaje':'La tarea no existe'});
+    }else{
+        res.status(200).json({
+        'mensaje':'Tarea encontrada',
+        'tarea':tarea_id
+        });
     }
 })
 
