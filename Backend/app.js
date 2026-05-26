@@ -62,6 +62,27 @@ app.delete('/tarea/:id',(req,res) => {
     }
 })
 
+//endpoint put que actualiza los datos de una tarea
+app.put('/tarea/:id',(req,res) => {
+    const id = parseInt(req.params.id);
+    const tarea_id = tareas.find((elemento) => elemento.id===id);
+    const tarea_actualizada = req.body;
+    if(!tarea_id){
+        res.status(404).json({'mensaje':'La tarea no existe'});
+    }else{
+        if(tarea_actualizada.title){
+        tarea_id.title = tarea_actualizada.title;
+        }
+        if(tarea_actualizada.description){
+            tarea_id.description=tarea_actualizada.description;
+        }
+        if(tarea_actualizada.completed !== undefined){
+            tarea_id.completed = tarea_actualizada.completed;
+        }
+        res.status(200).json({'mensaje':'Se cambiaron correctamente los datos'});
+    };
+});
+
 app.listen(PORT,() => {
     console.log(`Servidor corriendo en localhost:${PORT}`);
 });
