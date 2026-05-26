@@ -28,7 +28,7 @@ app.post('/tarea', (req,res) => {
         tareas.push({
         "id":(tareas.length+1),
         "title":tarea.title,
-        "description":""||tarea.description,
+        "description":tarea.description || "",
         "completed":false,
         "createdAt":new Date().toISOString()
         })
@@ -47,6 +47,18 @@ app.get('/tarea/:id',(req,res) => {
         'mensaje':'Tarea encontrada',
         'tarea':tarea_id
         });
+    }
+})
+
+//endpoint delete que elimina una tarea por su id
+app.delete('/tarea/:id',(req,res) => {
+    const id = parseInt(req.params.id);
+    const tarea_id = tareas.find((elemento) => elemento.id===id);
+    if(!tarea_id){
+        res.status(404).json({'mensaje':'La tarea no existe'});
+    }else{
+        tareas = tareas.filter((elemento) => elemento.id !== id);
+        res.status(200).json({'mensaje':'La tarea se elimino correctamente'});
     }
 })
 
