@@ -55,6 +55,10 @@ function App(){
         ...tareas,
         tareaCreada
       ]);
+
+      setTitle("");
+      setDescription("");
+      setModo("normal");
     }
     catch(error){
       setError("Ocurrio un error, no se pudo crear la tarea");

@@ -37,7 +37,7 @@ app.get('/tarea/:id',(req,res) => {
 app.post('/tarea', (req,res) => {
     const tarea = req.body;
     if(!tarea.title){
-        res.status(400).json(tarea);  
+        res.status(400).json({"mensaje":"El titulo es obligatorio"});  
     }else{
         const tareaCreada = {
         "id":String(generadorId()),
