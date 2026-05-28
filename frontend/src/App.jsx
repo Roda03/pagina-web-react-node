@@ -68,7 +68,6 @@ function App(){
       method:"DELETE"
       })
 
-      //actualizar las tareas para renderizar
       const tareasOptimizadas = tareas.filter((e) => e.id!==id);
 
       setTareas(tareasOptimizadas);
@@ -77,6 +76,8 @@ function App(){
       setError("Ocurrio un error, no se pudo eliminar la tarea");
     }
   }
+
+  //funcion que conecta con el put 
   const modificarTarea = async () => {
     const tareaModificada = {
       "title":title,
@@ -112,11 +113,6 @@ function App(){
 
       {modo === "normal" && 
       <div style={{display:"flex",justifyContent:"space-between",marginBottom:"20px"}}>
-        <div>
-          <input type="text" placeholder="Buscar por Id"/>
-          <button>Buscar</button>
-        </div>
-
         <button onClick={()=> setModo("crear")}>Nueva Tarea</button>
       </div>}
 

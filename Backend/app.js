@@ -6,11 +6,19 @@ const PORT=3000;
 app.use(cors());
 app.use(express.json());
 
+let tareas = [] //Array que se utiliza para guardar las tareas.
+let contadorId = 0; //contador para que no haya inconsistencias en el momento de generar ID
+
+
+//funcion para generar el id de forma adecuada
+const generadorId = () => {
+    contadorId++;
+    return contadorId;
+}
+
 app.get('/',(req,res) => {
     res.json({'mensaje':'servidor funcionando'});
 });
-
-tareas = [] //Array que se utiliza para guardar las tareas.
 
 //Endpoint get que muestra todas las tareas.
 app.get('/tarea',(req,res) => {
@@ -35,13 +43,14 @@ app.post('/tarea', (req,res) => {
         res.status(400).json(tarea);  
     }else{
         const tareaCreada = {
-        "id":String(tareas.length+1),//Acabo de cambiar esto, por si algo falla despues
+        "id":String(generadorId()),//Correccion de la forma de generar ID(Me generaba inconsistencias)
         "title":tarea.title,
         "description":tarea.description || "",
         "completed":false,
         "createdAt":new Date().toISOString()
         }
         tareas.push(tareaCreada);
+        console.log(tareaCreada.id);
         res.status(201).json(tareaCreada);
     }
 })
