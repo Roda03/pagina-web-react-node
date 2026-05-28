@@ -7,8 +7,8 @@ function App(){
   const [title,setTitle] = useState("");
   const [description,setDescription] = useState("");
   const [completed,setCompleted] = useState(false);
-  const [modo,setModo] = useState("normal");//Con esto manejo los formularios
-  const [tareaEliminadaBoolean,setTareaEliminadaBoolean] = useState(false);//Me sirve para manejar la confirmacion del delete de una tarea
+  const [modo,setModo] = useState("normal");
+  const [tareaEliminadaBoolean,setTareaEliminadaBoolean] = useState(false);
   const [tareaEliminada,setTareaEliminada] = useState(null)
   const [tareaEditar,setTareaEditar] = useState(null);
   const [loading,setLoading] = useState(true);
@@ -61,12 +61,12 @@ function App(){
     }
   }
  
-  //Funcion que elimina una tarea mediante el endpoint DELETE de la API consumida
   const eliminarTarea = async (id) => {
     try{
       await fetch (`http://localhost:3000/tarea/${id}`, {
       method:"DELETE"
       })
+
 
       const tareasOptimizadas = tareas.filter((e) => e.id!==id);
 
@@ -76,8 +76,7 @@ function App(){
       setError("Ocurrio un error, no se pudo eliminar la tarea");
     }
   }
-
-  //funcion que conecta con el put 
+ 
   const modificarTarea = async () => {
     const tareaModificada = {
       "title":title,
@@ -127,20 +126,6 @@ function App(){
 
       </div>}
 
-      {tareaEliminadaBoolean && 
-      <div style={{border:"1px solid red",padding:"15px",borderRadius:"10px",marginBottom:"20px",backgroundColor:"#ffe5e5"}}>
-        <p>Seguro que desea eliminar esta tarea?</p>
-        <div style={{display:"flex",gap:"10px"}}>
-          <button onClick={() => {
-          eliminarTarea(tareaEliminada.id);
-          setTareaEliminadaBoolean(false)
-          }}>Si</button>
-
-          <button onClick={() => setTareaEliminadaBoolean(false)}>No</button>
-        </div>
-      
-      </div>}
-
       {modo === "editar" &&
       <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
         <h2 style={{display:"flex",justifyContent:"center"}}> Modificar Tarea</h2>
@@ -177,6 +162,19 @@ function App(){
                 setTareaEliminada(e);
               }}>Eliminar</button>
             </div>
+            {tareaEliminadaBoolean && tareaEliminada?.id === e.id &&
+              <div style={{border:"1px solid red",padding:"15px",borderRadius:"10px",margin:"15px 0",backgroundColor:"#ffe5e5"}}>
+                <p>Seguro que desea eliminar esta tarea?</p>
+                <div style={{display:"flex",gap:"10px",marginTop:"10px"}}>
+                  <button onClick={() => {
+                  eliminarTarea(tareaEliminada.id);
+                  setTareaEliminadaBoolean(false)
+                  }}>Si</button>
+
+                  <button onClick={() => setTareaEliminadaBoolean(false)}>No</button>
+                </div>
+              
+              </div>}
             
           </div>
         ))}

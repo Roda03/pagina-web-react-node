@@ -6,11 +6,11 @@ const PORT=3000;
 app.use(cors());
 app.use(express.json());
 
-let tareas = [] //Array que se utiliza para guardar las tareas.
-let contadorId = 0; //contador para que no haya inconsistencias en el momento de generar ID
+let tareas = [] 
+let contadorId = 0; 
 
 
-//funcion para generar el id de forma adecuada
+
 const generadorId = () => {
     contadorId++;
     return contadorId;
@@ -20,12 +20,10 @@ app.get('/',(req,res) => {
     res.json({'mensaje':'servidor funcionando'});
 });
 
-//Endpoint get que muestra todas las tareas.
 app.get('/tarea',(req,res) => {
     res.status(200).json(tareas);
 });
 
-//endpoint get que filtra una tarea con su respectivo id
 app.get('/tarea/:id',(req,res) => {
     const id = req.params.id;
     const tarea_id = tareas.find((elemento) => elemento.id===id);
@@ -36,14 +34,13 @@ app.get('/tarea/:id',(req,res) => {
     }
 })
 
-//endpoint post que carga las tareas con el modelo adecuado
 app.post('/tarea', (req,res) => {
     const tarea = req.body;
     if(!tarea.title){
         res.status(400).json(tarea);  
     }else{
         const tareaCreada = {
-        "id":String(generadorId()),//Correccion de la forma de generar ID(Me generaba inconsistencias)
+        "id":String(generadorId()),
         "title":tarea.title,
         "description":tarea.description || "",
         "completed":false,
@@ -55,7 +52,6 @@ app.post('/tarea', (req,res) => {
     }
 })
 
-//endpoint delete que elimina una tarea por su id
 app.delete('/tarea/:id',(req,res) => {
     const id = req.params.id;
     const tarea_id = tareas.find((elemento) => elemento.id===id);
@@ -67,7 +63,6 @@ app.delete('/tarea/:id',(req,res) => {
     }
 })
 
-//endpoint put que actualiza los datos de una tarea
 app.put('/tarea/:id',(req,res) => {
     const id = req.params.id;
     const tarea_id = tareas.find((elemento) => elemento.id===id);
