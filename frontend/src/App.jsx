@@ -6,9 +6,11 @@ function App(){
   const [tareas,setTareas] = useState([]);
   const [title,setTitle] = useState("");
   const [description,setDescription] = useState("");
+  const [completed,setCompleted] = useState(false);
   const [modo,setModo] = useState("normal");//Con esto manejo los formularios
   const [tareaEliminadaBoolean,setTareaEliminadaBoolean] = useState(false);//Me sirve para manejar la confirmacion del delete de una tarea
   const [tareaEliminada,setTareaEliminada] = useState(null)
+  const [tareaEditar,setTareaEditar] = useState(null);
   const [loading,setLoading] = useState(true);
   const [error,setError] = useState(null);
 
@@ -95,8 +97,7 @@ function App(){
         </div>
 
         <button onClick={()=> setModo("crear")}>Nueva Tarea</button>
-      </div>
-      }
+      </div>}
 
       {modo === "crear" &&
       <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
@@ -107,9 +108,7 @@ function App(){
         <button onClick={cargarTarea}>Crear</button>
         <button onClick={() => setModo("normal")}>Cancelar</button>
 
-      </div>
-      
-      }
+      </div>}
 
       {tareaEliminadaBoolean && 
       <div style={{border:"1px solid red",padding:"15px",borderRadius:"10px",marginBottom:"20px",backgroundColor:"#ffe5e5"}}>
@@ -125,6 +124,20 @@ function App(){
       
       </div>}
 
+      {modo === "editar" &&
+      <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
+        <h2 style={{display:"flex",justifyContent:"center"}}> Modificar Tarea</h2>
+        <input type="text" placeholder="Titulo" value={title} onChange={(e) => setTitle(e.target.value)}/>
+        <input type="text" placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)}/>
+        <p>Estado:{completed ? "Completado" : "Pendiente"}</p>
+        <button onClick={() => {
+          !completed ? setCompleted(true) : setCompleted(false);
+        }}>{!completed ? "Completado" : "Pendiente"}</button>
+
+        <button>Modificar</button>
+        <button onClick={() => setModo("normal")}>Cancelar</button>
+      </div>}
+
       <div>
         {tareas.length === 0 ? <p style={{display:"flex",justifyContent:"center"}}>No existen tareas</p>
         : tareas.map((e) => (
@@ -134,7 +147,14 @@ function App(){
             <p>Estado:{e.completed ? "Completado" : "Pendiente"}</p>
 
             <div style={{display:"flex",gap:"10px"}}>
-              <button>Editar</button>
+              <button onClick={() => {
+                setTareaEditar(e);
+                setModo("editar");
+                setTitle(e.title);
+                setDescription(e.description);
+                setCompleted(e.completed);
+              }}>Editar</button>
+
               <button onClick={() => {
                 setTareaEliminadaBoolean(true);
                 setTareaEliminada(e);
