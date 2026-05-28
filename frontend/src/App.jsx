@@ -92,6 +92,7 @@ function App(){
       });
 
       conseguirTareas();
+      setModo("normal");
     }
     catch(error){
       setError("Se produjo un error, no se pudo modificar la tarea")
@@ -117,6 +118,7 @@ function App(){
 
       {modo === "crear" &&
       <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
+
         <h2 style={{display:"flex",justifyContent:"center"}}> Crear Tarea</h2>
         <input type="text" placeholder="Titulo(Obligatorio)" value={title} onChange={(e) => setTitle(e.target.value)}/>
         <input type="text" placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)}/>
@@ -124,31 +126,20 @@ function App(){
         <button onClick={cargarTarea}>Crear</button>
         <button onClick={() => setModo("normal")}>Cancelar</button>
 
-      </div>}
-
-      {modo === "editar" &&
-      <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
-        <h2 style={{display:"flex",justifyContent:"center"}}> Modificar Tarea</h2>
-        <input type="text" placeholder="Titulo" value={title} onChange={(e) => setTitle(e.target.value)}/>
-        <input type="text" placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)}/>
-        <p>Estado:{completed ? "Completado" : "Pendiente"}</p>
-        <button onClick={() => {
-          !completed ? setCompleted(true) : setCompleted(false);
-        }}>{!completed ? "Completado" : "Pendiente"}</button>
-
-        <button onClick={modificarTarea}>Modificar</button>
-        <button onClick={() => setModo("normal")}>Cancelar</button>
-      </div>}
+      </div>
+      }
 
       <div>
         {tareas.length === 0 ? <p style={{display:"flex",justifyContent:"center"}}>No existen tareas</p>
         : tareas.map((e) => (
           <div key={e.id} style={{border:"1px solid gray",padding:"10px",marginBottom:"10px",marginTop:"20px"}}>
+
             <h2>Titulo:{e.title}</h2>
             <p style={{overflowWrap:"break-word"}}><b>Descripcion:</b>{e.description}</p>
             <p>Estado:{e.completed ? "Completado" : "Pendiente"}</p>
 
             <div style={{display:"flex",gap:"10px"}}>
+
               <button onClick={() => {
                 setTareaEditar(e);
                 setModo("editar");
@@ -164,6 +155,7 @@ function App(){
             </div>
             {tareaEliminadaBoolean && tareaEliminada?.id === e.id &&
               <div style={{border:"1px solid red",padding:"15px",borderRadius:"10px",margin:"15px 0",backgroundColor:"#ffe5e5"}}>
+
                 <p>Seguro que desea eliminar esta tarea?</p>
                 <div style={{display:"flex",gap:"10px",marginTop:"10px"}}>
                   <button onClick={() => {
@@ -176,6 +168,23 @@ function App(){
               
               </div>}
             
+            {modo === "editar" && tareaEditar?.id === e.id &&
+              <div style={{border:"1px solid gray",padding:"15px",borderRadius:"5px",marginTop:"15px",width:"350px",display:"flex",flexDirection:"column",gap:"10px",backgroundColor:"#f5f5f5"}}>
+
+                <h2 style={{display:"flex",justifyContent:"center"}}> Modificar Tarea</h2>
+
+                <input type="text" placeholder="Titulo" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                <input type="text" placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <p>Estado:{completed ? "Completado" : "Pendiente"}</p>
+
+                <button onClick={() => {
+                  !completed ? setCompleted(true) : setCompleted(false);
+                }}>{!completed ? "Completado" : "Pendiente"}</button>
+
+                <button onClick={modificarTarea}>Modificar</button>
+                <button onClick={() => setModo("normal")}>Cancelar</button>
+              </div>
+            }
           </div>
         ))}
       </div>
