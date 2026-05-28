@@ -77,12 +77,33 @@ function App(){
       setError("Ocurrio un error, no se pudo eliminar la tarea");
     }
   }
+  const modificarTarea = async () => {
+    const tareaModificada = {
+      "title":title,
+      "description":description,
+      "completed":completed
+    }
+
+    try{
+      await fetch(`http://localhost:3000/tarea/${tareaEditar.id}`,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(tareaModificada)
+      });
+
+      conseguirTareas();
+    }
+    catch(error){
+      setError("Se produjo un error, no se pudo modificar la tarea")
+    }
+  }
+
 
   if(loading){
-    return <p>Cargando...</p>
+    return <p style={{display:"flex",justifyContent:"center"}}>Cargando...</p>
   }
   if(error){
-    return <p>{error}</p>
+    return <p style={{display:"flex",justifyContent:"center"}}>{error}</p>
   }
 
   return(
@@ -134,7 +155,7 @@ function App(){
           !completed ? setCompleted(true) : setCompleted(false);
         }}>{!completed ? "Completado" : "Pendiente"}</button>
 
-        <button>Modificar</button>
+        <button onClick={modificarTarea}>Modificar</button>
         <button onClick={() => setModo("normal")}>Cancelar</button>
       </div>}
 
@@ -143,7 +164,7 @@ function App(){
         : tareas.map((e) => (
           <div key={e.id} style={{border:"1px solid gray",padding:"10px",marginBottom:"10px",marginTop:"20px"}}>
             <h2>Titulo:{e.title}</h2>
-            <p>Descripcion:{e.description}</p>
+            <p style={{overflowWrap:"break-word"}}><b>Descripcion:</b>{e.description}</p>
             <p>Estado:{e.completed ? "Completado" : "Pendiente"}</p>
 
             <div style={{display:"flex",gap:"10px"}}>
