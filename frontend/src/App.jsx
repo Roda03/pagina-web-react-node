@@ -7,6 +7,8 @@ function App(){
   const [title,setTitle] = useState("");
   const [description,setDescription] = useState("");
   const [modo,setModo] = useState("normal");//Con esto manejo los formularios
+  const [tareaEliminadaBoolean,setTareaEliminadaBoolean] = useState(false);//Me sirve para manejar la confirmacion del delete de una tarea
+  const [tareaEliminada,setTareaEliminada] = useState(null)
   const [loading,setLoading] = useState(true);
   const [error,setError] = useState(null);
 
@@ -56,6 +58,23 @@ function App(){
       setError("Ocurrio un error, no se pudo crear la tarea");
     }
   }
+ 
+  //Funcion que elimina una tarea mediante el endpoint DELETE de la API consumida
+  const eliminarTarea = async (id) => {
+    try{
+      await fetch (`http://localhost:3000/tarea/${id}`, {
+      method:"DELETE"
+      })
+
+      //actualizar las tareas para renderizar
+      const tareasOptimizadas = tareas.filter((e) => e.id!==id);
+
+      setTareas(tareasOptimizadas);
+    }
+    catch(error){
+      setError("Ocurrio un error, no se pudo eliminar la tarea");
+    }
+  }
 
   if(loading){
     return <p>Cargando...</p>
@@ -81,7 +100,8 @@ function App(){
 
       {modo === "crear" &&
       <div style={{border:"1px solid gray",padding:"15px",borderRadius:"10px",margin:"20px auto",display:"flex",flexDirection:"column",gap:"10px",width:"300px"}}>
-        <input type="text" placeholder="Titulo" value={title} onChange={(e) => setTitle(e.target.value)}/>
+        <h2 style={{display:"flex",justifyContent:"center"}}> Crear Tarea</h2>
+        <input type="text" placeholder="Titulo(Obligatorio)" value={title} onChange={(e) => setTitle(e.target.value)}/>
         <input type="text" placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)}/>
 
         <button onClick={cargarTarea}>Crear</button>
@@ -90,6 +110,20 @@ function App(){
       </div>
       
       }
+
+      {tareaEliminadaBoolean && 
+      <div style={{border:"1px solid red",padding:"15px",borderRadius:"10px",marginBottom:"20px",backgroundColor:"#ffe5e5"}}>
+        <p>Seguro que desea eliminar esta tarea?</p>
+        <div style={{display:"flex",gap:"10px"}}>
+          <button onClick={() => {
+          eliminarTarea(tareaEliminada.id);
+          setTareaEliminadaBoolean(false)
+          }}>Si</button>
+
+          <button onClick={() => setTareaEliminadaBoolean(false)}>No</button>
+        </div>
+      
+      </div>}
 
       <div>
         {tareas.length === 0 ? <p style={{display:"flex",justifyContent:"center"}}>No existen tareas</p>
@@ -101,7 +135,10 @@ function App(){
 
             <div style={{display:"flex",gap:"10px"}}>
               <button>Editar</button>
-              <button>Eliminar</button>
+              <button onClick={() => {
+                setTareaEliminadaBoolean(true);
+                setTareaEliminada(e);
+              }}>Eliminar</button>
             </div>
             
           </div>
