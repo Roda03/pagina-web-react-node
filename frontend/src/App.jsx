@@ -39,7 +39,7 @@ function App(){
       "description" : description
     }
 
-    if(!title){
+    if(!title.trim()){
       return;
     }
 
@@ -183,7 +183,7 @@ function App(){
 
                 <button onClick={() => {
                   !completed ? setCompleted(true) : setCompleted(false);
-                }}>{!completed ? "Completado" : "Pendiente"}</button>
+                }}>Presione para cambiar estado</button>
 
                 <button onClick={modificarTarea}>Modificar</button>
                 <button onClick={() => setModo("normal")}>Cancelar</button>
